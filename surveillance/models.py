@@ -7,42 +7,55 @@ STATUT_CHOICES = [
     ('soumis', 'Soumis'),
 ]
 
-class FormulaireRegion(models.Model):
-    region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='formulaires')
+class RapportHebdomadaire(models.Model):
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name='rapports')
     utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_rapport = models.DateField()
     semaine_iso = models.PositiveIntegerField()
+    annee = models.PositiveIntegerField()
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='brouillon')
-    rapport_global = models.ForeignKey(
-        'reports.RapportGlobal', on_delete=models.SET_NULL,
-        null=True, blank=True, related_name='formulaires_region'
-    )
+    conclusion = models.TextField(
+    blank=True
+        )
+    
 
     def __str__(self):
-        return f"Formulaire {self.region} - semaine {self.semaine_iso}"
+        return f"{self.region} - Semaine {self.semaine_iso}/{self.annee}"
 
-
-class FormulaireCentral(models.Model):
-    utilisateur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    regions = models.ManyToManyField(Region, related_name='formulaires_centraux')
-    date_rapport = models.DateField()
-    semaine_iso = models.PositiveIntegerField()
-    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='brouillon')
-    rapport_global = models.ForeignKey(
-        'reports.RapportGlobal', on_delete=models.SET_NULL,
-        null=True, blank=True, related_name='formulaires_central'
+class RapportCentral(models.Model):
+    utilisateur = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE
     )
+
+    semaine_iso = models.PositiveIntegerField()
+
+    annee = models.PositiveIntegerField()
+
+    fichier = models.FileField(
+        upload_to="rapports_centraux/"
+    )
+
+    date_upload = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Formulaire Central - semaine {self.semaine_iso}"
 
 
 class MaladieDeclaree(models.Model):
-    formulaire_region = models.ForeignKey(FormulaireRegion, on_delete=models.CASCADE, null=True, blank=True, related_name='maladies')
-    formulaire_central = models.ForeignKey(FormulaireCentral, on_delete=models.CASCADE, null=True, blank=True, related_name='maladies')
+
+    rapport = models.ForeignKey(
+        RapportHebdomadaire,
+        on_delete=models.CASCADE,
+        related_name="maladies"
+    )
+
     nom_maladie = models.CharField(max_length=100)
+
     nb_cas = models.PositiveIntegerField(default=0)
+
     nb_deces = models.PositiveIntegerField(default=0)
+
     nb_hospitalises = models.PositiveIntegerField(default=0)
 
     def __str__(self):
@@ -50,15 +63,18 @@ class MaladieDeclaree(models.Model):
 
 
 class Evenement(models.Model):
-    formulaire_region = models.ForeignKey(FormulaireRegion, on_delete=models.CASCADE, null=True, blank=True, related_name='evenements')
-    formulaire_central = models.ForeignKey(FormulaireCentral, on_delete=models.CASCADE, null=True, blank=True, related_name='evenements')
+
+    rapport = models.ForeignKey(
+        RapportHebdomadaire,
+        on_delete=models.CASCADE,
+        related_name="evenements"
+    )
+
     type_evenement = models.CharField(max_length=100)
+
     statut = models.CharField(max_length=20)
 
     def __str__(self):
         return self.type_evenement
 
 
-class ConclusionRegion(models.Model):
-    formulaire_region = models.OneToOneField(FormulaireRegion, on_delete=models.CASCADE, related_name='conclusion')
-    texte = models.TextField()
