@@ -1,3 +1,12 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import (
+    RapportCNVZ,
+    RapportGlobal,
+    ConclusionGlobale,
+)
+
+
+admin.site.register(RapportCNVZ)
+admin.site.register(RapportGlobal)
+admin.site.register(ConclusionGlobale)

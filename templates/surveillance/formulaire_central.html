@@ -1,5 +1,67 @@
-<h2>Bienvenue, {{ user.username }} (Central)</h2>
-<form method="post" action="{% url 'logout' %}" style="display: inline;">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-link p-0">Se déconnecter</button>
-</form>
+{% extends "base.html" %}
+
+{% block title %}
+Central humain - EpiTEC
+{% endblock %}
+
+
+{% block content %}
+
+<div class="card">
+
+    <h1>
+        Formulaire hebdomadaire
+    </h1>
+
+    <p>
+        Déclarant :
+        <strong>Central humain</strong>
+    </p>
+
+    <p>
+        Le central humain remplit
+        le même formulaire que les régions.
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <h2>
+        I - Surveillance basée sur les indicateurs
+    </h2>
+
+    <ul>
+        <li>Maladies à déclaration obligatoire</li>
+        <li>Surveillance sentinelle</li>
+        <li>MAPI</li>
+        <li>WNV</li>
+        <li>Maladies à déclaration non obligatoire</li>
+    </ul>
+
+</div>
+
+
+<div class="card">
+
+    <h2>
+        II - Surveillance basée sur les événements
+    </h2>
+
+    <p>
+        Les événements seront ajoutés dans cette section.
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <button class="btn-primary">
+        Commencer le formulaire
+    </button>
+
+</div>
+
+{% endblock %}

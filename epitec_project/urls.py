@@ -22,11 +22,32 @@ from django.urls import path, include
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', RedirectView.as_view(pattern_name='login', permanent=False)),  # <- nouvelle ligne
-    path('', include('accounts.urls')),
-    path('surveillance/', include('surveillance.urls')),
-    path('dashboard/', include('dashboard.urls')),
+    path("admin/", admin.site.urls),
+
+    path(
+        "",
+        RedirectView.as_view(
+            pattern_name="login",
+            permanent=False,
+        ),
+    ),
+
+    path("", include("accounts.urls")),
+
+    path(
+        "surveillance/",
+        include("surveillance.urls"),
+    ),
+
+    path(
+        "reports/",
+        include("reports.urls"),
+    ),
+
+    path(
+        "dashboard/",
+        include("dashboard.urls"),
+    ),
 ]
 
 if settings.DEBUG:
