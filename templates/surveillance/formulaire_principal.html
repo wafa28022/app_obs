@@ -1,20 +1,28 @@
 {% extends "base.html" %}
 
 {% block title %}
-CNVZ - EpiTEC
+Formulaire hebdomadaire - EpiTEC
 {% endblock %}
-
 
 {% block content %}
 
 <div class="card">
 
-    <h1>Espace CNVZ</h1>
+    <h1>
+        Formulaire hebdomadaire
+    </h1>
 
     <p>
-        Dépôt du rapport hebdomadaire
-        de veille zoosanitaire.
+        Déclarant :
+        <strong>{{ type_declarant }}</strong>
     </p>
+
+    {% if request.user.role == "region" %}
+        <p>
+            Région :
+            <strong>{{ request.user.region }}</strong>
+        </p>
+    {% endif %}
 
 </div>
 
@@ -30,89 +38,75 @@ CNVZ - EpiTEC
 
 <div class="card">
 
-    <h2>Importer le rapport</h2>
+    <h2>Identification du rapport</h2>
 
-    <p>
-        Formats acceptés :
-        PDF, PowerPoint (.ppt, .pptx)
-    </p>
-
-
-    <form
-        method="post"
-        enctype="multipart/form-data"
-    >
+    <form method="post">
 
         {% csrf_token %}
 
-
-        {% if form.non_field_errors %}
-            <div>
-                {{ form.non_field_errors }}
-            </div>
-        {% endif %}
-
-
-        <p>
-            <label>
-                {{ form.titre.label }}
-            </label>
-
-            <br>
-
-            {{ form.titre }}
-
-            {{ form.titre.errors }}
-        </p>
-
+        {{ form.non_field_errors }}
 
         <p>
             <label>
                 {{ form.date_debut_semaine.label }}
             </label>
-
             <br>
-
             {{ form.date_debut_semaine }}
-
             {{ form.date_debut_semaine.errors }}
         </p>
-
 
         <p>
             <label>
                 {{ form.date_fin_semaine.label }}
             </label>
-
             <br>
-
             {{ form.date_fin_semaine }}
-
             {{ form.date_fin_semaine.errors }}
         </p>
 
-
         <p>
             <label>
-                {{ form.fichier_rapport.label }}
+                {{ form.date_saisie.label }}
             </label>
-
             <br>
-
-            {{ form.fichier_rapport }}
-
-            {{ form.fichier_rapport.errors }}
+            {{ form.date_saisie }}
+            {{ form.date_saisie.errors }}
         </p>
-
 
         <button
             type="submit"
             class="btn-primary"
         >
-            Déposer le rapport
+            Créer le formulaire
         </button>
 
     </form>
+
+</div>
+
+
+<div class="card">
+
+    <h2>
+        I - Surveillance basée sur les indicateurs
+    </h2>
+
+    <p>
+        Cette section sera activée après la création du formulaire.
+    </p>
+
+</div>
+
+
+<div class="card">
+
+    <h2>
+        II - Surveillance basée sur les événements
+    </h2>
+
+    <p>
+        Cette section sera activée après la création du formulaire.
+    </p>
 
 </div>
 
